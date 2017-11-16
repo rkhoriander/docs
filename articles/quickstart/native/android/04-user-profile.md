@@ -21,7 +21,7 @@ This tutorial shows you how to get and modify the user's profile data with Auth0
 ## Before You Start
 
 ::: note
-Before you continue with this tutorial, make sure that you have completed the [Login](/quickstart/native/android/00-login) and [Session Handling](/quickstart/native/android/03-session-handling) tutorials. To call the API clients, you need a valid access token and ID token.
+Before you continue with this tutorial, make sure that you have completed the [Login](/quickstart/native/android/00-login) and [Session Handling](/quickstart/native/android/03-session-handling) tutorials. To call the API clients, you need a valid access token and id token.
 :::
 
 Before launching the login process, you need to make sure you get a valid profile from the authorization server. To do that, ask for the `openid profile email` scope. Find the snippet in which you initialize the `WebAuthProvider` class. To that snippet, add the line `withScope("openid profile email")`.
@@ -37,7 +37,14 @@ WebAuthProvider.init(auth0)
 
 ## Request User Data
 
-Create instances of the API clients. You will use them to request the users' profile data.
+
+To get the user's information:
+1. Use the user's access token to call the `userInfo` method in the `AuthenticationAPIClient` client instance.
+The profile obtained this way is OIDC-conformant. Depending on the [scopes](/scopes/current) you requested when logging in, the profile contains different information. The result will never contain fields outside the OIDC specification.
+2. Get the user's full profile using the [Management API](/api/management/v2#!/Users). This step is explained next:
+
+
+Create an instance of the Users API client using the id token. The snippet below makes use of the Credentials Manager to retrieve the credentials that you saved in the log in step. This client is used to request the users' profile data.
 
 ```java
 // app/src/main/java/com/auth0/samples/activities/MainActivity.java
@@ -45,59 +52,55 @@ Create instances of the API clients. You will use them to request the users' pro
 Auth0 auth0 = new Auth0(this);
 auth0.setOIDCConformant(true);
 
-String idToken = CredentialsManager.getCredentials(this).getIdToken();
-UsersAPIClient usersClient = new UsersAPIClient(auth0, idToken);
-AuthenticationAPIClient authClient = new AuthenticationAPIClient(auth0);
+SecureCredentialsManager credentialsManager = new SecureCredentialsManager(this, new AuthenticationAPIClient(auth0), new SharedPreferencesStorage(this));
+credentialsManager.getCredentials(new BaseCallback<Credentials, CredentialsManagerException>() {
+
+    @Override
+    public void onSuccess(Credentials credentials) {
+        String idToken = credentials.getIdToken();
+        UsersAPIClient usersClient = new UsersAPIClient(auth0, idToken);
+        //...
+    }
+
+    @Override
+    public void onFailure(CredentialsManagerException error) {
+        //Credentials expired. Log in again
+    }
+});
 ```
 
 ::: note
-Do not hardcode the Auth0 `domain` and `clientId` values. We recommend you add them to the `strings.xml` file.
+Do not hardcode the Auth0 `domain` and `clientId` values when creating the Auth0 instance. We recommend you add them to the `strings.xml` file.
 :::
 
-To get the user's information:
-1. Use the user's access token to call the `userInfo` method in the `AuthenticationAPIClient` client instance.
-You get an instance of the `UserProfile` profile. The profile is OIDC-conformant. Depending on the on the [scopes](/scopes/current) you requested, the profile contains different information. 
-2. To get the user's full profile, use the [Management API](/api/management/v2#!/Users).
+
+Decode the id token using a [JWT library](https://github.com/auth0/JWTDecode.Android) and obtain the Subject value, which represents the id of the user to whom the token was issued.
 
 ```java
 // app/src/main/java/com/auth0/samples/activities/MainActivity.java
 
-String accessToken = CredentialsManager.getCredentials(this).getAccessToken();
-authenticationClient.userInfo(accessToken)
-    .start(new BaseCallback<UserProfile, AuthenticationException>() {
-
-        @Override
-        public void onSuccess(final UserProfile userInfo) {
-            String userId = userInfo.getId();
-            // fetch the full user profile
-        }
-
-        @Override
-        public void onFailure(AuthenticationException error) {
-            //show error
-        }
-    });
+private String getUserId(String idToken) {
+    return new JWT(idToken).getSubject();
+}
 ```
 
-When you get the `sub` value, call the [Management API](https://auth0.com/docs/api/management/v2#!/Users).
-
-Use the `UsersAPIClient` client and the user's ID to get the full user profile.
+Use the user id to call `getProfile` on the Users API client and obtain the full user profile. Use the received data to update the layout.
 
 ```java
 // app/src/main/java/com/auth0/samples/activities/MainActivity.java
 
-usersClient.getProfile(userId)
-        .start(new BaseCallback<UserProfile, ManagementException>() {
-            @Override
-            public void onSuccess(UserProfile profile) {
-                // Display the user profile
-            }
+usersClient.getProfile(getUserId(idToken))
+  .start(new BaseCallback<UserProfile, ManagementException>() {
+      @Override
+      public void onSuccess(UserProfile profile) {
+        // Display the user profile
+      }
 
-            @Override
-            public void onFailure(ManagementException error) {
-                //show error
-            }
-        });
+      @Override
+      public void onFailure(ManagementException error) {
+        // Show error
+      }
+  });
 ```
 
 ## Access the Data Inside the Received Profile
@@ -116,10 +119,10 @@ profile.getPictureURL();
 ```
 
 ::: panel Modifying the UI
-You cannot modify the UI inside the `onSuccess()` method because the method works in a second thread. To solve this issue, you can choose between three options:
-* Persist the data
-* Create a task in the UI thread
-* Create a handler to receive the information
+You cannot modify the UI inside the callback methods as they run in a different thread. To solve this issue you can choose between three options:
+* Persist the data and then retrieve it
+* Create a task in the UI thread and run it. i.e. using the `Activity#runOnUiThread` method.
+* Create a `Handler` to post the information
 :::
 
 ### Additional information
@@ -140,7 +143,7 @@ You can choose the key names and value types for subscripting the `user_metadata
 
 #### B. App metadata
 
-The `appMetadata` map contains fields that are usually added with a [Rule](/rule) or a [Hook](/hooks). For native platforms, this information is read-only.
+The `appMetadata` map contains fields that are usually added with a [Rule](/rules) or a [Hook](/hooks). For native platforms, this information is read-only.
 
 ::: note
 To learn more about metadata, see the [metadata documentation](/metadata).
@@ -152,19 +155,18 @@ The `extraInfo` map contains additional values that are stored in Auth0 but not 
 
 ## Update the User's Profile
 
-You can only update the user metadata. To do this, create a `Map<String, Object>` object and add the new metadata:
+You can only update the user metadata. To do this, create a `Map<String, Object>` object and add the information you want to store.
 
 ```java
 Map<String, Object> userMetadata = new HashMap<>();
 userMetadata.put("country", "USA");
 ```
 
-Update the information with the `UsersAPIClient` client:
+Update the information with the User API client:
 
 ```java
 // app/src/main/java/com/auth0/samples/activities/MainActivity.java
 
-String idToken = CredentialsManager.getCredentials(this).getIdToken();
 UsersAPIClient usersClient = new UsersAPIClient(auth0, idToken);
 usersClient.updateMetadata(userInfo.getId(), userMetadata).start(new BaseCallback<UserProfile, ManagementException>() {
   @Override
@@ -179,3 +181,8 @@ usersClient.updateMetadata(userInfo.getId(), userMetadata).start(new BaseCallbac
   }
 });
 ```
+
+
+::: note
+A call to `updateMetadata` will replace any previous user metadata stored in Auth0. Remember to copy the old values that you wish to maintain. 
+::: 
