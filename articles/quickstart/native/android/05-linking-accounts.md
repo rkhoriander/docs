@@ -65,19 +65,19 @@ protected void onCreate(Bundle savedInstanceState) {
 
   // Normal log in with existing credentials
   if (!linkSessions && credentialsManager.hasValidCredentials()) {
-        // Obtain the existing credentials and move to the next activity
-        credentialsManager.getCredentials(new BaseCallback<Credentials, CredentialsManagerException>() {
-            @Override
-            public void onSuccess(final Credentials credentials) {
-                showNextActivity(credentials);
-            }
+    // Obtain the existing credentials and move to the next activity
+    credentialsManager.getCredentials(new BaseCallback<Credentials, CredentialsManagerException>() {
+        @Override
+        public void onSuccess(final Credentials credentials) {
+            showNextActivity(credentials);
+        }
 
-            @Override
-            public void onFailure(CredentialsManagerException error) {
-                //Authentication cancelled by the user. Exit the app
-                finish();
-            }
-        });
+        @Override
+        public void onFailure(CredentialsManagerException error) {
+            //Authentication cancelled by the user. Exit the app
+            finish();
+        }
+    });
     return;
   }
 
@@ -106,21 +106,51 @@ protected void onSaveInstanceState(Bundle outState) {
 }
 ```
 
-In the login response, based on the boolean flag set in the first step, decide if you need to show the `MainActivity` screen, or continue to link the accounts.
+In the login response, based on the boolean flag set in the first step, decide if you need to show the `MainActivity` screen, or continue to link the accounts. Remember to verify the tokens before proceeding.
 
 ```java
 // app/src/main/java/com/auth0/samples/activities/LoginActivity.java
-@Override
-public void onSuccess(Credentials credentials) {
-  if (linkSessions) {
-    // Link the accounts
-    performLink(credentials.getIdToken());
-    return;
-  } 
 
-  //Store the credentials and move to the next activity
-  credentialsManager.saveCredentials(credentials);
-  showNextActivity(credentials);
+private final AuthCallback webCallback = new AuthCallback() {
+    @Override
+    public void onFailure(@NonNull final Dialog dialog) {
+        //show error message 
+        //If currently linking accounts, finish.
+    }
+
+    @Override
+    public void onFailure(AuthenticationException exception) {
+        //show error message 
+        //If currently linking accounts, finish.
+    }
+
+    @Override
+    public void onSuccess(@NonNull Credentials credentials) {
+        verifyTokens(credentials);
+    }
+};
+
+private void verifyTokens(final Credentials credentials) {
+    client.userInfo(credentials.getAccessToken()).start(new BaseCallback<UserProfile, AuthenticationException>() {
+        @Override
+        public void onSuccess(UserProfile payload) {
+            if (linkSessions) {
+                // Link the accounts
+                performLink(credentials.getIdToken());
+                return;
+            }
+
+            //Store the credentials and move to the next activity
+            credentialsManager.saveCredentials(credentials);
+            showNextActivity(credentials);
+        }
+
+        @Override
+        public void onFailure(final AuthenticationException exception) {
+            //show error message 
+            //If currently linking accounts, finish.
+        }
+    });
 }
 ```
 
@@ -196,15 +226,15 @@ To instantiate the `UsersAPIClient` client, use the id token for the main accoun
 UsersAPIClient client = new UsersAPIClient(auth0, primaryIdToken);
 
 client.unlink(userProfile.getId(), secondaryAccountIdentity.getId(), secondaryAccountIdentity.getProvider())
-        .start(new BaseCallback<List<UserIdentity>, ManagementException>() {
-            @Override
-            public void onSuccess(List<UserIdentity> userIdentities) {
-                //Accounts unlinked
-            }
+    .start(new BaseCallback<List<UserIdentity>, ManagementException>() {
+        @Override
+        public void onSuccess(List<UserIdentity> userIdentities) {
+            //Accounts unlinked
+        }
 
-            @Override
-            public void onFailure(ManagementException error) {
-                //Accounts unlink failed
-            }
-        });
+        @Override
+        public void onFailure(ManagementException error) {
+            //Accounts unlink failed
+        }
+    });
 ```

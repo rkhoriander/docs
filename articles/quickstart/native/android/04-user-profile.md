@@ -30,9 +30,9 @@ Before launching the login process, you need to make sure you get a valid profil
 Auth0 auth0 = new Auth0(this);
 auth0.setOIDCConformant(true);
 WebAuthProvider.init(auth0)
-                .withScheme("demo")
-                .withScope("openid profile email")
-                .start(this, callback);
+    .withScheme("demo")
+    .withScope("openid profile email")
+    .start(this, callback);
 ```
 
 ## Request User Data
