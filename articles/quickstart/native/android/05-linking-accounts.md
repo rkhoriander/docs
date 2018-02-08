@@ -18,7 +18,7 @@ This tutorial shows you how to link two different accounts for the same user usi
   ]
 }) %>__
 
-## Before You Start
+## Before you start
 
 Before you continue with this tutorial, make sure that you have completed the previous tutorials. This tutorial assumes that:
 * You have integrated [Auth0](https://github.com/auth0/Auth0.Android) as a dependency in your project.
@@ -27,11 +27,11 @@ Before you continue with this tutorial, make sure that you have completed the pr
 
 We recommend that you read the [Linking Accounts](/link-accounts) documentation to understand the process of linking accounts.
 
-## Enter Account Credentials
+## Enter account credentials
 
 Your users may want to link their other accounts to the account they are logged in to.
 
-To achieve this, you need to store the user ID for the logged user in the Intent, along with the id token and access token provided by the LoginActivity at launch, which are already available in the intent extras. 
+To achieve this, you need to store the user ID for the logged user in the Intent, along with the ID Token and Access Token provided by the LoginActivity at launch, which are already available in the intent extras. 
 
 ```java
 // app/src/main/java/com/auth0/samples/activities/MainActivity.java
@@ -44,7 +44,7 @@ startActivity(intent);
 
 Obtain the stored values in `LoginActivity`.
 
-First in `onCreate`, check if a new account linking was requested. Check as well if a previous `savedInstanceState` exists and contains the "logging in" state. This flag is set when the web authentication is launched and must be correctly handled to avoid state loss.
+First, in `onCreate`, check if a new account linking was requested. Check as well if a previous `savedInstanceState` exists and contains the "logging in" state. This flag is set when the web authentication is launched and must be correctly handled to avoid state loss.
 
 ```java
 // app/src/main/java/com/auth0/samples/activities/LoginActivity.java
@@ -158,10 +158,9 @@ private void verifyTokens(final Credentials credentials) {
 Make sure to handle the callback's failure calls as well
 :::
 
+## Link the accounts
 
-## Link the Accounts
-
-The process to link accounts requires the logged-in user's ID and the id tokens for the two accounts:
+The process to link accounts requires the logged-in user's ID and the ID Tokens for the two accounts:
 * The saved account the user initially logged in to
 * The second account received in the last login response
 
@@ -186,7 +185,7 @@ private void performLink(final String secondaryIdToken) {
 }
 ```
 
-## Retrieve the Linked Accounts
+## Retrieve the linked accounts
 
 The updated list of identities is returned in the `link` method response. Alternatively, obtain the user's full profile, use the user's ID to call the `getProfile` method in the `UsersAPIClient` class. The profile includes the linked accounts as the `UserIdentities` array.
 
@@ -211,14 +210,15 @@ usersClient.getProfile(userInfo.getId())
 For more information, check the [UserIdentity.java class documentation](https://github.com/auth0/Auth0.Android/blob/master/auth0/src/main/java/com/auth0/android/result/UserIdentity.java).
 :::
 
-## Unlink the Accounts
+## Unlink the accounts
 
 To unlink the accounts, you need to specify the following:
+
 * user ID for the main account
 * user ID for the linked account
 * the provider name for the linked account
 
-To instantiate the `UsersAPIClient` client, use the id token for the main account.
+To instantiate the `UsersAPIClient` client, use the ID Token for the main account.
 
 ```java
 // app/src/main/java/com/auth0/samples/activities/MainActivity.java

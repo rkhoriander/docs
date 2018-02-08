@@ -20,9 +20,9 @@ This tutorial shows you how to let users log in and maintain an active session w
 
 You need the `Credentials` class to handle users' credentials. The class is composed of these elements:
 
-* `accessToken`: Access token used by the Auth0 API. To learn more, see the [access token documentation](/tokens/access-token).
-* `idToken`: Identity token that proves the identity of the user. To learn more, see the [ID token documentation](/tokens/id-token).
-* `refreshToken`: Refresh token that can be used to request new tokens without signing in again. To learn more, see the [refresh token documentation](/tokens/refresh-token/current).
+* `accessToken`: Access Token used by the Auth0 API. To learn more, see the [Access Token documentation](/tokens/access-token).
+* `idToken`: ID Token that proves the identity of the user. To learn more, see the [ID token documentation](/tokens/id-token).
+* `refreshToken`: Refresh Token that can be used to request new tokens without signing in again. To learn more, see the [Refresh Token documentation](/tokens/refresh-token/current).
 * `tokenType`: The type of tokens issued by the server.
 * `expiresIn`: The number of seconds before the tokens expire.
 * `expiresAt`: The date when the tokens expire.
@@ -30,13 +30,13 @@ You need the `Credentials` class to handle users' credentials. The class is comp
 
 Tokens are objects used to prove your identity against the Auth0 APIs. Read more about them in the [tokens documentation](https://auth0.com/docs/tokens).
 
-## Before You Start
+## Before you start
 
 ::: note
 Before you continue with this tutorial, make sure that you have completed the [Login](/quickstart/native/android/00-login) tutorial.
 :::
 
-Before you launch the login process, make sure you get a valid refresh token in the response. To do that, ask for the `offline_access` scope. Find the snippet in which you are initializing the `WebAuthProvider` class. To that snippet, add the line `withScope("openid offline_access")`.
+Before you launch the login process, make sure you get a valid Refresh Token in the response. To do that, ask for the `offline_access` scope. Find the snippet in which you are initializing the `WebAuthProvider` class. To that snippet, add the line `withScope("openid offline_access")`.
 
 ```java
 // app/src/main/java/com/auth0/samples/LoginActivity.java
@@ -50,18 +50,17 @@ WebAuthProvider.init(auth0)
     .start(LoginActivity.this, webCallback);
 ```
 
-## Check for Tokens when the Application Starts
+## Check for tokens when the application starts
 
-::: panel Learn about refresh tokens
-Before you go further with this tutorial, read the [refresh token documentation](/refresh-token).
+::: panel Learn about Refresh Tokens
+Before you go further with this tutorial, read the [Refresh Token documentation](/refresh-token).
 It is important that you remember the following:
-* Refresh tokens must be securely saved.
-* Even though refresh tokens cannot expire, they can be revoked.
+* Refresh Tokens must be securely saved.
+* Even though Refresh Tokens cannot expire, they can be revoked.
 * New tokens will have the same scope as was originally requested during the first authentication.
 :::
 
-You can simplify the way you handle user sessions using a Credential Manager class, which knows how to securely store, retrieve and renew credentials obtained from Auth0. Two classes are provided in the SDK to help you achieve this. Further read on how they work and their implementation differences is available in the [Saving and Renewing Tokens](/libraries/auth0-android/save-and-refresh-tokens.md) article. For this series of tutorials we're going to use the `SecureCredentialsManager` class as it encrypts the credentials before storing them in a private SharedPreferences file.
-
+You can simplify the way you handle user sessions using a Credential Manager class which knows how to securely store, retrieve and renew credentials obtained from Auth0. Two such classes are provided in the SDK to help you achieve this. Further reading on how they work and their implementation differences is available in the [Saving and Renewing Tokens](/libraries/auth0-android/save-and-refresh-tokens.md) article. For this series of tutorials, we are going to use the `SecureCredentialsManager` class, because it encrypts the credentials before storing them in a private SharedPreferences file.
 
 Create a new instance of the Credentials Manager. When you run the application, you should check if there are any previously stored credentials. You can use these credentials to bypass the login screen:
 
@@ -88,8 +87,7 @@ Create a new instance of the Credentials Manager. When you run the application, 
 Ideally a single class should manage the handling of credentials. You can share this instance across activities or create a new one every time is required as long as the Storage strategy persists the data in the same location. Check the `LoginActivity` class to understand how to achieve this in a single class.
 :::
 
-
-## Save the User's Credentials
+## Save the user's credentials
 
 After a successful login response, you can verify the tokens against the [userinfo endpoint](/api/authentication#get-user-info) and then store the user's credentials using the `saveCredentials` method.
 
@@ -133,9 +131,9 @@ private void verifyTokens(final Credentials credentials) {
 A Storage defines how data is going to be persisted in the device. The Storage implementation given to the Credentials Manager in the seed project uses a SharedPreferences file to store the user credentials in [Private mode](https://developer.android.com/reference/android/content/Context.html#MODE_PRIVATE). You can modify this behavior by implementing a custom Storage. 
 :::
 
-## Recover the User's Credentials
+## Recover the user's credentials
 
-Retrieving the credentials from the Credentials Manager is an async process, as credentials may have expired and require to be refreshed. This renewing process is done automatically by the Credentials Manager as long as a valid refresh token is currently stored. A `CredentialsManagerException` exception will be raised if the credentials cannot be renewed.
+Retrieving the credentials from the Credentials Manager is an async process, as credentials may have expired and need to be refreshed.. This renewing process is done automatically by the Credentials Manager as long as a valid Refresh Token is currently stored. A `CredentialsManagerException` exception will be raised if the credentials cannot be renewed.
 
 ```java
 // app/src/main/java/com/auth0/samples/LoginActivity.java
@@ -157,10 +155,9 @@ credentialsManager.getCredentials(new BaseCallback<Credentials, CredentialsManag
 The `SecureCredentialsManager` can prompt the user for local device authentication using the configured Lock Screen (PIN, Password, Pattern, Fingerprint) before giving them the stored credentials. This behavior can be enabled calling the `SecureCredentialsManager#requireAuthentication` method when setting up the Credentials Manager. The sample has this line commented for convenience, remove the comment to try it. 
 :::
 
+## Log the user out
 
-## Log the User Out
-
-To log the user out, you remove their credentials and navigate them to the login screen. When using a Credentials Manager you do that calling `clearCredentials`.
+To log the user out, you remove their credentials and navigate them to the login screen. When using a Credentials Manager you can do this by calling `clearCredentials`.
 
 In the sample, the LoginActivity checks that a boolean extra is present in the Intent at the Activity launch, so that if this flag is true the credentials are first removed from the Credentials Manager.
 

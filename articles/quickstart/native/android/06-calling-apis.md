@@ -21,21 +21,21 @@ This tutorial shows you how to access protected resources in your API.
   ]
 }) %>__
 
-## Before You Start
+## Before you start
 
 Before you continue with this tutorial, make sure that you have completed the previous tutorials. This tutorial assumes that:
+
 * You have completed the [Session Handling](/quickstart/native/android/03-session-handling) tutorial and you know how to handle the `Credentials` object.
 * You have set up a backend application as API. To learn how to do it, follow one of the [backend tutorials](/quickstart/backend).
-
 
 <%= include('../_includes/_calling_api_create_api') %>
 
 <%= include('../_includes/_calling_api_create_scope') %>__
 
 
-## Get the User's Access Token
+## Get the user's access token
 
-To retrieve an access token that is authorized to access your API, you need to specify the API Identifier you created in the Auth0 dashboard before. At the top of the class add the constants for accessing the API: API_URL and API_IDENTIFIER
+To retrieve an Access Token that is authorized to access your API, you need to specify the API Identifier you created in the Auth0 dashboard before. At the top of the class add the constants for accessing the API: API_URL and API_IDENTIFIER
 
 ```java
 // app/src/main/java/com/auth0/samples/LoginActivity.java
@@ -71,20 +71,19 @@ private void login() {
 For instructions on how to authenticate a user, see the [Login](/quickstart/native/android/00-login) tutorial.
 :::
 
-## Attach the Token
+## Attach the token
 
-To give the authenticated user access to secured resources in your API, include the user's access token in the requests you send to the API.
+To give the authenticated user access to secured resources in your API, include the user's Access Token in the requests you send to the API.
 
 ::: note
 In this example, we use the [OkHttp](https://github.com/square/okhttp) library.
 :::
 
-Create an instance of the `OkHttpClient` client and a new `Request`. Use the provided builder to customize the Http method, the URL and the headers in the request. Set the **Authorization** header with the token type and the user's access token.
+Create an instance of the `OkHttpClient` client and a new `Request`. Use the provided builder to customize the Http method, the URL and the headers in the request. Set the **Authorization** header with the token type and the user's Access Token.
 
 ::: note
 Depending on the standards in your API, you configure the authorization header differently. The code below is just an example.
 :::
-
 
 ```java
 // app/src/main/java/com/auth0/samples/LoginActivity.java
@@ -97,7 +96,7 @@ Request request = new Request.Builder()
     .build();
 ```
 
-## Send the Request
+## Send the request
 
 Tell the client to create a new `Call` with the request you created. Call the `enqueue` function to execute the request asynchronously.
 
@@ -121,4 +120,4 @@ client.newCall(request).enqueue(new Callback() {
 });
 ```
 
-You need to configure your backend application to protect your API endpoints with the key for your Auth0 client, API identifier and API scopes. In this example, you can use the user's access token issued by Auth0 to call your own APIs.
+You need to configure your backend application to protect your API endpoints with the key for your Auth0 client, API identifier and API scopes. In this example, you can use the user's Access Token issued by Auth0 to call your own APIs.

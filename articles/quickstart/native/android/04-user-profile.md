@@ -18,10 +18,10 @@ This tutorial shows you how to get and modify the user's profile data with Auth0
   ]
 }) %>__
 
-## Before You Start
+## Before you start
 
 ::: note
-Before you continue with this tutorial, make sure that you have completed the [Login](/quickstart/native/android/00-login) and [Session Handling](/quickstart/native/android/03-session-handling) tutorials. To call the API clients, you need a valid access token and id token.
+Before you continue with this tutorial, make sure that you have completed the [Login](/quickstart/native/android/00-login) and [Session Handling](/quickstart/native/android/03-session-handling) tutorials. To call the API clients, you need a valid Access Token and ID Token.
 :::
 
 Before launching the login process, you need to make sure you get a valid profile from the authorization server. To do that, ask for the `openid profile email` scope. Find the snippet in which you initialize the `WebAuthProvider` class. To that snippet, add the line `withScope("openid profile email")`.
@@ -35,16 +35,16 @@ WebAuthProvider.init(auth0)
     .start(this, callback);
 ```
 
-## Request User Data
-
+## Request user data
 
 To get the user's information:
-1. Use the user's access token to call the `userInfo` method in the `AuthenticationAPIClient` client instance.
+
+1. Use the user's Access Token to call the `userInfo` method in the `AuthenticationAPIClient` client instance.
 The profile obtained this way is OIDC-conformant. Depending on the [scopes](/scopes/current) you requested when logging in, the profile contains different information. The result will never contain fields outside the OIDC specification.
-2. Get the user's full profile using the [Management API](/api/management/v2#!/Users). This step is explained next:
+1. Get the user's full profile using the [Management API](/api/management/v2#!/Users). This step is explained next:
 
 
-Create an instance of the Users API client using the id token that you saved in the log in step. In the snippet bellow we obtain it from the extras that the LoginActivity class has passed when starting this activity. The API client is used to request the user's profile data.
+Create an instance of the Users API client using the ID Token that you saved in the log in step. In the snippet bellow we obtain it from the extras that the LoginActivity class has passed when starting this activity. The API client is used to request the user's profile data.
 
 ```java
 // app/src/main/java/com/auth0/samples/activities/MainActivity.java
@@ -60,8 +60,7 @@ UsersAPIClient usersClient = new UsersAPIClient(auth0, idToken);
 Do not hardcode the Auth0 `domain` and `clientId` values when creating the Auth0 instance. We recommend you add them to the `strings.xml` file.
 :::
 
-
-Decode the id token using a [JWT library](https://github.com/auth0/JWTDecode.Android) and obtain the Subject value, which represents the id of the user to whom the token was issued.
+Decode the ID Token using a [JWT library](https://github.com/auth0/JWTDecode.Android) and obtain the **Subject** value, which represents the id of the user to whom the token was issued.
 
 ```java
 // app/src/main/java/com/auth0/samples/activities/MainActivity.java
@@ -90,7 +89,7 @@ usersClient.getProfile(getUserId(idToken))
   });
 ```
 
-## Access the Data Inside the Received Profile
+## Access the data inside the received profile
 
 ### Default information
 
@@ -140,7 +139,7 @@ To learn more about metadata, see the [metadata documentation](/metadata).
 
 The `extraInfo` map contains additional values that are stored in Auth0 but not mapped to a `UserProfile` getter method. For native platforms, this information is read-only.
 
-## Update the User's Profile
+## Update the user's profile
 
 You can only update the user metadata. To do this, create a `Map<String, Object>` object and add the information you want to store.
 
@@ -168,7 +167,6 @@ usersClient.updateMetadata(userInfo.getId(), userMetadata).start(new BaseCallbac
   }
 });
 ```
-
 
 ::: note
 A call to `updateMetadata` will replace any previous user metadata stored in Auth0. Remember to copy the old values that you wish to maintain. 
