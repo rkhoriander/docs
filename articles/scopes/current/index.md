@@ -14,7 +14,7 @@ You can use scopes to:
 
 - Let a client application authenticate users and get additional information about them, such as their email or picture. For details, refer to [OpenID Connect Scopes](#openid-connect-scopes).
 
-- Implement granular access control to your API. In this case, you need to define custom scopes for your API and add these newly-created scopes to your `scope` request parameter: `scope=read:contacts`. For details, refer to [API Scopes](#api-scopes).
+- Implement granular access control to your API. In this case, you need to define custom scopes for your API in the Dashboard and add these newly-created scopes to your `scope` request parameter: `scope=read:contacts`. For details, refer to [API Scopes](#api-scopes).
 
 ## OpenID Connect Scopes
 
