@@ -66,7 +66,7 @@ Internet connectivity is required for an update to work.
 
 ## Configuration file
 
-The `config.json` file is the AD/LDAP Connector's main configuration file.  It can be edited to make advanced changes that are not available via the AD/LDAP **Connector Admin Console**. The file is located in the install directory for the AD/LDAP Connector. The following settings are supported in this file:
+The `config.json` file is the AD/LDAP Connector's main configuration file.  It can be edited to make advanced changes that are not available via the AD/LDAP **Connector Admin Console**. The file is located in the install directory for the AD/LDAP Connector, which (for Windows) is usually found at `C:\Program Files (x86)\Auth0\AD LDAP Connector`. The following settings are supported in this file:
 
  - `AD_HUB`: The Auth0 endpoint to which the connector will connect. This value is maintained by the connector.
  - `CA_CERT`: An authority certificate or array of authority certificates to check the remote host against.
@@ -102,6 +102,9 @@ The `config.json` file is the AD/LDAP Connector's main configuration file.  It c
  - `SSL_PFX`: Base64 encoded certificate to use for SSL.
  - `TENANT_SIGNING_KEY`: Your Auth0 tenant used to verify JWTs (eg: when a user authenticates, we verify that the authentication request comes from Auth0 using a JWT).
  - `WSFED_ISSUER`: The issuer being set in the WS-Federation responses. If a connection is configured with email domains, the first email domain configured in Auth0 will be used as issuer. Default: `urn:auth0`.
+ 
+This file can also be used to determine which tenants are using a particular connector.
+
 
 ## Point an AD/LDAP Connector to a new connection
 
