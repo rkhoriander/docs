@@ -13,7 +13,7 @@ useCase:
 
 # Implement MFA with Push Notifications for a Web App
 
-[Multi-factor Authentication (MFA)](/multifactor-authentication) will add an extra layer of security to your web app. <dfn data-key="multifactor-authentication">MFA</dfn> requires users to present more than one piece of identifying information to log in to your app. One of the most straightforward ways to handle MFA is to use push notifications with Auth0's Guardian app, installed on the user's smartphone.
+[Multi-factor Authentication (MFA)](/multifactor-authentication) will add an extra layer of security to your web app. <dfn data-key="multifactor-authentication">MFA</dfn> requires users to present more than one piece of identifying information to log in to your app. One of the most straightforward ways to handle MFA is to use push notifications with Auth0's Guardian app, installed on the user's Android or Apple device.
 
 ## Prerequisites
 * An active Auth0 account. If you do not have an active account, you can create one on the [Signup](https://auth0.com/signup) page.
@@ -22,7 +22,7 @@ useCase:
 
 ## Choose the MFA factor
 
-Auth0 offers you the ability to choose from different [factors](/multifactor-authentication/factors) your users will be required to choose from when authenticating with MFA. In this case, you will use push notifications which will be sent to the Auth0 Guardian app installed on your user's smartphone. You can also choose the MFA policy when choosing the factor.
+Auth0 offers you the ability to choose from different [factors](/multifactor-authentication/factors) your users will be required to choose from when authenticating with MFA. In this case, you will use push notifications which will be sent to the Auth0 Guardian app installed on your user's Android or Apple device. You can also choose the MFA policy when choosing the factor.
 
 * Navigate to the [Multi-factor Authentication](${manage_url}/#/mfa) page in your Auth0 Dashboard. 
 * Under **Factors**, locate and click the toggle next to **Push via Auth0 Guardian**.
@@ -56,7 +56,7 @@ Once the user has installed Guardian and MFA has been enabled for your web app, 
 * Open the Guardian app on your Android or Apple Device, and scan the QR code. 
 * When prompted, enter the code now showing on the device. 
 
-Once the device has been registered, the user can simply swipe left on the push notifications they received on their device to accept or deny the request. 
+Once the device has been registered, the user can simply swipe left on the push notifications they receive on their device after a successful password entry to accept or deny the request. 
 
 ## Keep Reading
 
