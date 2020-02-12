@@ -22,7 +22,7 @@ useCase:
 
 ## Choose the MFA factor
 
-Auth0 offers you the ability to choose from different [factors](/multifactor-authentication/factors) your users will be required to choose from when authenticating with MFA. In this case, you will use push notifications which will be sent to the Auth0 Guardian app installed on your user's Android or Apple device. You can also choose the MFA policy when choosing the factor.
+Auth0 offers you the ability to choose from different [factors](/multifactor-authentication/factors) your users will be required to select when authenticating with MFA. In this case, you will use push notifications sent to the Auth0 Guardian app installed on your user's Android or Apple device. You can also choose the MFA policy when choosing the factor.
 
 * Navigate to the [Multi-factor Authentication](${manage_url}/#/mfa) page in your Auth0 Dashboard. 
 * Under **Factors**, locate and click the toggle next to **Push via Auth0 Guardian**.
@@ -34,7 +34,7 @@ Rules affecting Multi-factor Authentication will take precedence over the policy
 
 ## Create the MFA Rules
 
-You can configure [rules](/rules) in your [Auth0 Dashboard](${manage_url}/#/rules). Rules are powerful and can be used for a wide variety of ways to exercise granular control over your authentication pipeline. Here, you will use rules to specify that MFA is to be used, and further to use push notifications with Auth0 Guardian as the MFA factor. 
+You can configure [rules](/rules) in your [Auth0 Dashboard](${manage_url}/#/rules). Rules are powerful and can be used to exercise granular control over your authentication pipeline. Here, you will use rules to specify that MFA is used, and further to use push notifications with Auth0 Guardian as the MFA factor. 
 
 * On the [Rules](${manage_url}/#/rules) page in your Dashboard, click **+ Create Rule**. 
 * Scroll to the **Multifactor** section, and click **Multifactor with Auth0 Guardian**.
