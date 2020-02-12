@@ -13,7 +13,7 @@ useCase:
 
 # Implement MFA with Push Notifications for a Web App
 
-[Multi-factor Authentication (MFA)](/multifactor-authentication) will add an extra layer of security to your web app. MFA requires users to present more than one piece of identifying information to log in to your app. One of the most straightforward ways to handle MFA is to use push notifications with Auth0's Guardian app, installed on the user's smartphone.
+[Multi-factor Authentication (MFA)](/multifactor-authentication) will add an extra layer of security to your web app. <dfn data-key="multifactor-authentication">MFA</dfn> requires users to present more than one piece of identifying information to log in to your app. One of the most straightforward ways to handle MFA is to use push notifications with Auth0's Guardian app, installed on the user's smartphone.
 
 ## Prerequisites
 * An active Auth0 account. If you do not have an active account, you can create one on the [Signup](https://auth0.com/signup) page.
@@ -50,7 +50,7 @@ You can configure [rules](/rules) in your [Auth0 Dashboard](${manage_url}/#/rule
 
 ## Test the Login
 
-Once the user has installed Guardian and MFA has been enabled for your web app, you can attempt to login to the app. The initial configuration of Guardian requires that the user scan a QR code to register the device. 
+Once the user has installed Guardian and MFA has been enabled for your web app, you can attempt to login to the app. The initial configuration of Guardian requires that the user scan a <dfn data-key="qr-code">QR code</dfn> to register the device. 
 
 * Log in to your web app. After a successful password entry, you will be presented with a QR code. 
 * Open the Guardian app on your Android or Apple Device, and scan the QR code. 
